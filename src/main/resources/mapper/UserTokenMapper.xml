@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.baseapi.dao.UserTokenMapper">
+
+  <resultMap id="BaseResultMap" type="com.example.baseapi.bean.UserToken">
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="expire_time" jdbcType="TIMESTAMP" property="expireTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    user_id, token, update_time, expire_time
+  </sql>
+
+  <insert id="insert" parameterType="com.example.baseapi.bean.UserToken">
+    insert
+    into user_token (user_id, token, update_time,expire_time)
+    values (#{userId,jdbcType=BIGINT}, #{token,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{expireTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <delete id="delete" parameterType="java.lang.Long">
+    delete
+    from user_token
+    where user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+
+  <update id="update" parameterType="com.example.baseapi.bean.UserToken">
+    update user_token
+    set
+        token = #{token,jdbcType=VARCHAR},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        expire_time = #{expireTime,jdbcType=TIMESTAMP}
+    where user_id = #{userId,jdbcType=BIGINT}
+  </update>
+
+  <select id="select" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user_token
+    where user_id = #{userId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectByToken" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from user_token
+    where token = #{token,jdbcType=VARCHAR}
+  </select>
+
+</mapper>

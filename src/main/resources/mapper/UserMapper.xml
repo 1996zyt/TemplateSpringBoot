@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.baseapi.dao.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.baseapi.bean.User">
+        <id column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="password_md5" jdbcType="VARCHAR" property="passwordMd5"/>
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted"/>
+        <result column="is_locked" jdbcType="TINYINT" property="isLocked"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        user_id, user_name, password_md5, is_deleted,is_locked, create_time
+    </sql>
+
+    <insert id="insert" parameterType="com.example.baseapi.bean.User">
+        insert into user (user_id, user_name,password_md5,is_deleted, is_locked, create_time)
+        values (#{userId,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR},#{passwordMd5,jdbcType=VARCHAR}, #{isDeleted,jdbcType=TINYINT}, #{isLocked,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <update id="delete" parameterType="java.lang.Long">
+        update user
+        set
+            is_deleted = 1
+        where user_id = #{userId,jdbcType=BIGINT} and is_deleted = 0
+    </update>
+
+    <update id="update" parameterType="com.example.baseapi.bean.User">
+        update user
+        set
+          user_name = #{userName,jdbcType=VARCHAR},
+          password_md5 = #{passwordMd5,jdbcType=VARCHAR},
+          is_deleted = #{isDeleted,jdbcType=TINYINT},
+          is_locked = #{isLocked,jdbcType=TINYINT},
+          create_time = #{createTime,jdbcType=TIMESTAMP}
+
+        where user_id = #{userId,jdbcType=BIGINT}
+    </update>
+
+    <select id="select" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where user_id = #{userId,jdbcType=BIGINT} and is_deleted = 0
+    </select>
+
+    <select id="selectByUserName" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where user_name = #{userName} and is_deleted = 0
+    </select>
+
+    <select id="selectByUserNameAndPassWord" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where user_name = #{userName} and password_md5 = #{passWord} and is_deleted = 0
+    </select>
+
+</mapper>
